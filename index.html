@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>System Status</title>
+<title>LEP Status</title>
 
 <style>
 body {
@@ -26,8 +26,14 @@ body {
 }
 
 h1 {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   font-size: 20px;
+}
+
+.sub {
+  font-size: 12px;
+  opacity: 0.5;
+  margin-bottom: 15px;
 }
 
 .row {
@@ -54,7 +60,7 @@ h1 {
   font-size: 11px;
   opacity: 0.5;
   height: 60px;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .hidden-link {
@@ -68,7 +74,8 @@ h1 {
 <body>
 
 <div class="card">
-  <h1>System Status</h1>
+  <h1>LEP Status</h1>
+  <div class="sub">v1.0.0 — final release</div>
 
   <div class="row">
     <div class="label">execution</div>
@@ -76,7 +83,7 @@ h1 {
   </div>
 
   <div class="row">
-    <div class="label">delivery</div>
+    <div class="label">release</div>
     <div class="ok">COMPLETE</div>
   </div>
 
@@ -86,13 +93,13 @@ h1 {
   </div>
 
   <div class="row">
-    <div class="label">org.strategy</div>
-    <div class="err">UNDEFINED</div>
+    <div class="label">org.strategy.lookup</div>
+    <div class="err">NOT_FOUND</div>
   </div>
 
   <div class="row">
     <div class="label">ownership</div>
-    <div class="warn">UNASSIGNED</div>
+    <div class="warn">UNRESOLVED</div>
   </div>
 
   <div class="row">
@@ -116,8 +123,8 @@ h1 {
 const logs = [
   "[INFO] Deployment successful",
   "[INFO] Execution on schedule",
-  "[WARN] Strategy not found at org level",
-  "[WARN] Ownership unresolved",
+  "[WARN] org.strategy lookup returned NOT_FOUND",
+  "[WARN] ownership unresolved",
   "[INFO] Entering runtime",
   "[ERROR] Undefined behavior expected"
 ];
@@ -125,7 +132,9 @@ const logs = [
 let i = 0;
 setInterval(() => {
   if (i < logs.length) {
-    document.getElementById("log").innerHTML += logs[i] + "<br>";
+    const logDiv = document.getElementById("log");
+    logDiv.innerHTML += logs[i] + "<br>";
+    logDiv.scrollTop = logDiv.scrollHeight;
     i++;
   }
 }, 1200);
