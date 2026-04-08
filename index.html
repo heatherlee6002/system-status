@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>System Status</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, monospace;
+  background: #0b0f19;
+  color: #e6edf3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  background: #111827;
+  border-radius: 16px;
+  padding: 30px 40px;
+  width: 420px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.label { opacity: 0.7; }
+
+.ok { color: #22c55e; }
+.warn { color: #f59e0b; }
+.err { color: #ef4444; }
+
+.footer {
+  margin-top: 20px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.log {
+  margin-top: 10px;
+  font-size: 11px;
+  opacity: 0.5;
+  height: 60px;
+  overflow: hidden;
+}
+
+.hidden-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: default;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>System Status</h1>
+
+  <div class="row">
+    <div class="label">execution</div>
+    <div class="ok">ON_SCHEDULE</div>
+  </div>
+
+  <div class="row">
+    <div class="label">delivery</div>
+    <div class="ok">COMPLETE</div>
+  </div>
+
+  <div class="row">
+    <div class="label">strategy.local</div>
+    <div class="ok">DEFINED</div>
+  </div>
+
+  <div class="row">
+    <div class="label">org.strategy</div>
+    <div class="err">UNDEFINED</div>
+  </div>
+
+  <div class="row">
+    <div class="label">ownership</div>
+    <div class="warn">UNASSIGNED</div>
+  </div>
+
+  <div class="row">
+    <div class="label">alignment</div>
+    <div class="warn">EVENTUAL</div>
+  </div>
+
+  <div class="footer">
+    <div id="status">monitoring...</div>
+    <div>
+      <a href="/postmortem" class="hidden-link">
+        handover.complete = true;
+      </a>
+    </div>
+  </div>
+
+  <div class="log" id="log"></div>
+</div>
+
+<script>
+const logs = [
+  "[INFO] Deployment successful",
+  "[INFO] Execution on schedule",
+  "[WARN] Strategy not found at org level",
+  "[WARN] Ownership unresolved",
+  "[INFO] Entering runtime",
+  "[ERROR] Undefined behavior expected"
+];
+
+let i = 0;
+setInterval(() => {
+  if (i < logs.length) {
+    document.getElementById("log").innerHTML += logs[i] + "<br>";
+    i++;
+  }
+}, 1200);
+</script>
+
+</body>
+</html>
