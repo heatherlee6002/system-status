@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Postmortem</title>
+<title>LEP Postmortem</title>
 
 <style>
 body {
@@ -17,27 +17,27 @@ body {
 <body>
 
 <pre>
-POSTMORTEM REPORT
+LEP POSTMORTEM REPORT
 
 status: delivered
 execution: on_schedule
 
-local.strategy: present
-org.strategy: not_found
+strategy.local: present
+org.strategy.lookup: NOT_FOUND
 
-ownership: fragmented
-alignment: inconsistent
+ownership: unresolved
+alignment: eventual
 
 root_cause:
-  - lack_of_expertise
-  - absence_of_accountability
+  - org.strategy.lookup == NOT_FOUND
+  - ownership.unresolved
   - system_operating_without_governance
 
 resolution:
   handover.complete = true
 
 next_steps:
-  outcome = ;)
+  outcome = undefined
 </pre>
 
 </body>
