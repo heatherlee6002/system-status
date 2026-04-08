@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>System Status</title>
+<title>LEP Status</title>
 
 <style>
 body {
@@ -26,8 +26,14 @@ body {
 }
 
 h1 {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   font-size: 20px;
+}
+
+.sub {
+  font-size: 12px;
+  opacity: 0.5;
+  margin-bottom: 15px;
 }
 
 .row {
@@ -40,7 +46,9 @@ h1 {
 .label { opacity: 0.7; }
 
 .ok { color: #22c55e; }
-.warn { color: #f59e0b; }
+
+/* warnings now red */
+.warn { color: #ef4444; }
 .err { color: #ef4444; }
 
 .footer {
@@ -52,9 +60,12 @@ h1 {
 .log {
   margin-top: 10px;
   font-size: 11px;
-  opacity: 0.5;
-  height: 60px;
-  overflow: hidden;
+  opacity: 0.7;
+  height: 90px;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.03);
+  padding: 8px;
+  border-radius: 6px;
 }
 
 .hidden-link {
@@ -68,7 +79,8 @@ h1 {
 <body>
 
 <div class="card">
-  <h1>System Status</h1>
+  <h1>LEP Status</h1>
+  <div class="sub">v1.0.0 — final release</div>
 
   <div class="row">
     <div class="label">execution</div>
@@ -76,7 +88,7 @@ h1 {
   </div>
 
   <div class="row">
-    <div class="label">delivery</div>
+    <div class="label">release</div>
     <div class="ok">COMPLETE</div>
   </div>
 
@@ -86,13 +98,18 @@ h1 {
   </div>
 
   <div class="row">
-    <div class="label">org.strategy</div>
-    <div class="err">UNDEFINED</div>
+    <div class="label">org.strategy.lookup</div>
+    <div class="err">NOT_FOUND</div>
+  </div>
+
+  <div class="row">
+    <div class="label">expertise.lookup</div>
+    <div class="err">NOT_FOUND</div>
   </div>
 
   <div class="row">
     <div class="label">ownership</div>
-    <div class="warn">UNASSIGNED</div>
+    <div class="warn">UNRESOLVED</div>
   </div>
 
   <div class="row">
@@ -116,19 +133,107 @@ h1 {
 const logs = [
   "[INFO] Deployment successful",
   "[INFO] Execution on schedule",
-  "[WARN] Strategy not found at org level",
-  "[WARN] Ownership unresolved",
+  "[WARN] org.strategy lookup returned NOT_FOUND",
+  "[WARN] expertise lookup returned NOT_FOUND",
+  "[WARN] ownership unresolved",
   "[INFO] Entering runtime",
   "[ERROR] Undefined behavior expected"
 ];
 
 let i = 0;
+const logDiv = document.getElementById("log");
+
 setInterval(() => {
   if (i < logs.length) {
-    document.getElementById("log").innerHTML += logs[i] + "<br>";
+    const line = document.createElement("div");
+    line.textContent = logs[i];
+
+    if (logs[i].includes("WARN") || logs[i].includes("ERROR")) {
+      line.style.color = "#ef4444";
+    }
+
+    logDiv.appendChild(line);
+    logDiv.scrollTop = logDiv.scrollHeight;
+
+    // trigger modal
+    if (logs[i].includes("expertise lookup returned NOT_FOUND")) {
+      setTimeout(showModal, 400);
+    }
+
     i++;
   }
 }, 1200);
+
+function showModal() {
+  const modal = document.createElement("div");
+
+  modal.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    ">
+      <div style="
+        background: #111827;
+        padding: 20px;
+        border-radius: 12px;
+        width: 320px;
+        font-family: monospace;
+        color: #e6edf3;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      ">
+        <div style="margin-bottom: 15px; font-size: 14px;">
+          expertise NOT_FOUND<br><br>
+          continue product?
+        </div>
+
+        <div style="display: flex; justify-content: space-between;">
+          <button onclick="continueFailure()" style="
+            background:#22c55e;
+            border:none;
+            padding:8px 12px;
+            border-radius:6px;
+            cursor:pointer;
+          ">Proceed</button>
+
+          <button onclick="closeModal()" style="
+            background:#374151;
+            border:none;
+            padding:8px 12px;
+            border-radius:6px;
+            cursor:pointer;
+            color:white;
+          ">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  window.currentModal = modal;
+}
+
+function closeModal() {
+  if (window.currentModal) {
+    document.body.removeChild(window.currentModal);
+  }
+}
+
+function continueFailure() {
+  closeModal();
+
+  const line = document.createElement("div");
+  line.textContent = "[FATAL] proceeding... failure expected";
+  line.style.color = "#ef4444";
+
+  logDiv.appendChild(line);
+  logDiv.scrollTop = logDiv.scrollHeight;
+}
 </script>
 
 </body>
